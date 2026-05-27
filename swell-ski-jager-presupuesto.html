@@ -808,40 +808,49 @@ footer {
 
 /* ── Activity selector ───────────────────────────────────── */
 .act-selector {
-  margin-top: 32px;
-  padding-top: 32px;
+  margin-top: 48px;
+  padding-top: 48px;
   border-top: 1px solid var(--line);
 }
 .act-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 16px;
+  gap: 14px;
+  margin-top: 24px;
 }
-@media (max-width: 700px) { .act-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 420px) { .act-grid { grid-template-columns: 1fr; } }
+@media (max-width: 800px) { .act-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .act-grid { grid-template-columns: 1fr; } }
 .act-card {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 2px solid var(--line);
   border-radius: var(--r-md);
-  padding: 14px 16px;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  overflow: hidden;
 }
-.act-card:hover { border-color: var(--grey-50); }
+.act-card:hover { border-color: var(--grey-50); transform: translateY(-2px); }
 .act-card.selected {
   border-color: var(--coastline);
-  background: rgba(99,172,229,.08);
+  background: rgba(99,172,229,.06);
 }
-.act-card-name { font-size: 13px; font-weight: 600; color: var(--paper); line-height: 1.3; }
-.act-card-price { font-size: 12px; color: var(--coastline); font-weight: 700; }
+.act-card-thumb {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+  background: var(--surface-2);
+}
+.act-card-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 5px; }
+.act-card-name { font-size: 14px; font-weight: 700; color: var(--paper); line-height: 1.3; }
+.act-card-price { font-size: 13px; color: var(--coastline); font-weight: 700; }
 .act-card-badge {
   font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--grey-60); margin-top: 2px;
 }
+.act-card.act-none .act-card-thumb { display: none; }
+.act-card.act-none .act-card-body { padding: 20px 16px; }
 .act-card.act-none .act-card-price { color: var(--grey-60); }
 .act-detail-block {
   margin-top: 32px;
@@ -1128,37 +1137,57 @@ footer {
 
   <!-- ── Selector de actividad ────────────────────────────── -->
   <div class="act-selector">
-    <div class="section-label" style="margin-bottom:6px;">Experiencia extra</div>
-    <div style="font-size:13px; color:var(--grey-60); margin-bottom:16px;" id="act-selector-note">Elegí la actividad que suma el grupo · el precio se agrega al paquete</div>
+    <div class="section-title" data-fade style="margin-bottom:4px;">Elegí la actividad extra</div>
+    <div style="font-size:15px; color:var(--grey-60); margin-bottom:8px;" id="act-selector-note">Elegí la actividad que suma el grupo · el precio se agrega al paquete</div>
     <div class="act-grid">
       <div class="act-card act-none selected" id="act-none" onclick="selectActivity('none')">
-        <div class="act-card-name">Sin actividad extra</div>
-        <div class="act-card-price" style="color:var(--grey-60);">— incluido en precio base</div>
+        <div class="act-card-body">
+          <div class="act-card-name">Sin actividad extra</div>
+          <div class="act-card-price" style="color:var(--grey-60);">incluido en precio base</div>
+        </div>
       </div>
       <div class="act-card" id="act-4x4" onclick="selectActivity('4x4')">
-        <div class="act-card-name">4x4 + trekking con raqueta</div>
-        <div class="act-card-price">$220 USD / persona</div>
+        <img class="act-card-thumb" src="img/actividades/4x4-raqueta/01.jpg" loading="lazy" alt="4x4">
+        <div class="act-card-body">
+          <div class="act-card-name">4x4 + trekking con raqueta</div>
+          <div class="act-card-price">USD 220 / persona</div>
+        </div>
       </div>
       <div class="act-card" id="act-cabalgata" onclick="selectActivity('cabalgata')">
-        <div class="act-card-name">Cabalgata + asado</div>
-        <div class="act-card-price">$170 USD / persona</div>
+        <img class="act-card-thumb" src="img/actividades/cabalgata/01.jpg" loading="lazy" alt="Cabalgata">
+        <div class="act-card-body">
+          <div class="act-card-name">Cabalgata + asado</div>
+          <div class="act-card-price">USD 170 / persona</div>
+        </div>
       </div>
       <div class="act-card" id="act-kundo" onclick="selectActivity('kundo')" style="display:none;">
-        <div class="act-card-name">Navegada con Kundo</div>
-        <div class="act-card-price">$4.020 USD · grupo 30 pax</div>
-        <div class="act-card-badge">Solo Opción A</div>
+        <img class="act-card-thumb" src="img/actividades/navegada-kundo/01.jpg" loading="lazy" alt="Navegada">
+        <div class="act-card-body">
+          <div class="act-card-name">Navegada con Kundo</div>
+          <div class="act-card-price">USD 4.020 · grupo 30 pax</div>
+          <div class="act-card-badge">Solo Opción A</div>
+        </div>
       </div>
       <div class="act-card" id="act-moto60" onclick="selectActivity('moto60')">
-        <div class="act-card-name">Moto de nieve · 60 min</div>
-        <div class="act-card-price">$180 USD / persona</div>
+        <img class="act-card-thumb" src="img/actividades/moto-nieve/01.png" loading="lazy" alt="Moto de nieve">
+        <div class="act-card-body">
+          <div class="act-card-name">Moto de nieve · 60 min</div>
+          <div class="act-card-price">USD 180 / persona</div>
+        </div>
       </div>
       <div class="act-card" id="act-moto270" onclick="selectActivity('moto270')">
-        <div class="act-card-name">Moto de nieve + almuerzo · 2.5 hs</div>
-        <div class="act-card-price">$270 USD / persona</div>
+        <img class="act-card-thumb" src="img/actividades/moto-nieve/02.png" loading="lazy" alt="Moto de nieve">
+        <div class="act-card-body">
+          <div class="act-card-name">Moto de nieve + almuerzo · 2.5 hs</div>
+          <div class="act-card-price">USD 270 / persona</div>
+        </div>
       </div>
       <div class="act-card" id="act-cascada" onclick="selectActivity('cascada')">
-        <div class="act-card-name">Cascada del Duende + almuerzo</div>
-        <div class="act-card-price">$100 USD / persona</div>
+        <img class="act-card-thumb" src="img/actividades/cascada-duende/01.jpg" loading="lazy" alt="Cascada">
+        <div class="act-card-body">
+          <div class="act-card-name">Cascada del Duende + almuerzo</div>
+          <div class="act-card-price">USD 100 / persona</div>
+        </div>
       </div>
     </div>
   </div>
@@ -1859,30 +1888,30 @@ function adj(key, delta) {
 // ── Accommodation gallery ─────────────────────────────────
 var ALOJ_DATA = {
   A: {
-    label: 'Swell Bariloche · Casa privada · 30 pax',
+    label: 'Swell Snow House',
     houses: [{
-      name: 'Swell Bariloche',
-      main: 'img/alojamiento/bariloche/principal.jpg',
-      rest: ['img/alojamiento/bariloche/gs-24.jpg','img/alojamiento/bariloche/gs-93.jpg','img/alojamiento/bariloche/gs-103.jpg']
+      name: 'Swell Snow House',
+      main: 'img/alojamiento/snow-house/principal.jpg',
+      rest: ['img/alojamiento/snow-house/comedor.jpg','img/alojamiento/snow-house/jacuzzi.jpg','img/alojamiento/snow-house/living.jpg','img/alojamiento/snow-house/habitacion.jpg']
     }]
   },
   B: {
-    label: 'Dos Swell Houses · 30 + 30 pax',
+    label: 'Dos Swell Houses',
     houses: [
-      {
-        name: 'Swell Bariloche',
-        main: 'img/alojamiento/bariloche/principal.jpg',
-        rest: ['img/alojamiento/bariloche/gs-24.jpg','img/alojamiento/bariloche/gs-93.jpg','img/alojamiento/bariloche/gs-103.jpg']
-      },
       {
         name: 'Swell Snow House',
         main: 'img/alojamiento/snow-house/principal.jpg',
         rest: ['img/alojamiento/snow-house/comedor.jpg','img/alojamiento/snow-house/jacuzzi.jpg','img/alojamiento/snow-house/living.jpg','img/alojamiento/snow-house/habitacion.jpg']
+      },
+      {
+        name: 'Swell Bariloche',
+        main: 'img/alojamiento/bariloche/principal.jpg',
+        rest: ['img/alojamiento/bariloche/gs-24.jpg','img/alojamiento/bariloche/gs-93.jpg','img/alojamiento/bariloche/gs-103.jpg']
       }
     ]
   },
   C: {
-    label: 'Hostería · 60 pax',
+    label: 'Hostería',
     houses: []
   }
 };
@@ -1912,7 +1941,7 @@ var ACT_DATA = {
     pax: 60,
     desc: 'Un día de aventura fuera de la pista: recorrido en 4x4 por senderos de montaña patagónica y trekking con raquetas de nieve. Paisajes únicos, guía experto y todo el equipo incluido.',
     onlyA: false,
-    photos: ['img/actividades/4x4-raqueta/']
+    photos: ['img/actividades/4x4-raqueta/01.jpg','img/actividades/4x4-raqueta/02.jpg','img/actividades/4x4-raqueta/03.jpg']
   },
   'cabalgata': {
     name: 'Cabalgata + asado',
@@ -1921,7 +1950,7 @@ var ACT_DATA = {
     pax: 60,
     desc: 'Cabalgata por el bosque andino nevado con vistas a la cordillera, seguida de un asado típico patagónico. Una experiencia auténtica y relajada para después del ski.',
     onlyA: false,
-    photos: ['img/actividades/cabalgata/']
+    photos: ['img/actividades/cabalgata/01.jpg','img/actividades/cabalgata/02.jpg','img/actividades/cabalgata/03.png','img/actividades/cabalgata/06.png']
   },
   'kundo': {
     name: 'Navegada con Kundo · Nahuel Huapi',
@@ -1931,7 +1960,7 @@ var ACT_DATA = {
     pax: 30,
     desc: 'Navegación exclusiva por el Lago Nahuel Huapi con parada en Isla Victoria. Gastronomía premium a bordo, vistas de la cordillera desde el agua. Esta experiencia tiene cupo máximo de 30 personas — solo disponible en Opción A, que divide al grupo en dos mitades.',
     onlyA: true,
-    photos: ['img/actividades/navegada-kundo/']
+    photos: ['img/actividades/navegada-kundo/01.jpg','img/actividades/navegada-kundo/02.jpg','img/actividades/navegada-kundo/03.png','img/actividades/navegada-kundo/04.jpg']
   },
   'moto60': {
     name: 'Moto de nieve · 60 min',
@@ -1940,7 +1969,7 @@ var ACT_DATA = {
     pax: 60,
     desc: '60 minutos de moto de nieve por los senderos de Cerro Catedral. Velocidad, adrenalina y nieve en estado puro. Dos personas por moto — la dosis justa de adrenalina post-ski.',
     onlyA: false,
-    photos: ['img/actividades/moto-nieve/']
+    photos: ['img/actividades/moto-nieve/01.png','img/actividades/moto-nieve/02.png','img/actividades/moto-nieve/03.png']
   },
   'moto270': {
     name: 'Moto de nieve + almuerzo gourmet · 2.5 hs',
@@ -1949,7 +1978,7 @@ var ACT_DATA = {
     pax: 60,
     desc: 'La versión extendida: 2.5 horas en moto de nieve con más recorrido, más terreno y almuerzo gourmet en la montaña. Para los que quieren más.',
     onlyA: false,
-    photos: ['img/actividades/moto-nieve/']
+    photos: ['img/actividades/moto-nieve/01.png','img/actividades/moto-nieve/02.png','img/actividades/moto-nieve/03.png']
   },
   'cascada': {
     name: 'Cascada del Duende + almuerzo en montaña',
@@ -1958,7 +1987,7 @@ var ACT_DATA = {
     pax: 60,
     desc: 'Caminata guiada por el bosque andino hasta la Cascada del Duende, con almuerzo en la montaña incluido. La experiencia más contemplativa del menú — ideal para complementar dos días de ski.',
     onlyA: false,
-    photos: ['img/actividades/cascada-duende/']
+    photos: ['img/actividades/cascada-duende/01.jpg','img/actividades/cascada-duende/02.jpg','img/actividades/cascada-duende/03.png','img/actividades/cascada-duende/06.png']
   }
 };
 
@@ -1994,10 +2023,19 @@ function selectActivity(key) {
     var priceLabel = act.fixed
       ? 'USD ' + fmt(act.fixedTotal) + ' · grupo ' + act.pax + ' pax'
       : 'USD ' + fmt(act.price) + ' / persona';
+    var photosHtml = '';
+    if (act.photos && act.photos.length) {
+      photosHtml = '<div class="act-photos" style="margin-top:20px;">';
+      act.photos.forEach(function(src) {
+        photosHtml += '<img src="' + src + '" loading="lazy" alt="">';
+      });
+      photosHtml += '</div>';
+    }
     document.getElementById('act-detail-content-' + o).innerHTML =
       '<div class="act-detail-title">' + act.name + '</div>' +
       '<div class="act-detail-desc">' + act.desc + '</div>' +
-      '<div class="act-detail-price-tag">' + priceLabel + '</div>';
+      '<div class="act-detail-price-tag">' + priceLabel + '</div>' +
+      photosHtml;
   });
 }
 
