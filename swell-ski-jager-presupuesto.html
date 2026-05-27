@@ -805,6 +805,66 @@ footer {
   75% { transform: translateX(6px); }
 }
 
+
+/* ── Activity selector ───────────────────────────────────── */
+.act-selector {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+.act-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+@media (max-width: 700px) { .act-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 420px) { .act-grid { grid-template-columns: 1fr; } }
+.act-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.act-card:hover { border-color: var(--grey-50); }
+.act-card.selected {
+  border-color: var(--coastline);
+  background: rgba(99,172,229,.08);
+}
+.act-card-name { font-size: 13px; font-weight: 600; color: var(--paper); line-height: 1.3; }
+.act-card-price { font-size: 12px; color: var(--coastline); font-weight: 700; }
+.act-card-badge {
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--grey-60); margin-top: 2px;
+}
+.act-card.act-none .act-card-price { color: var(--grey-60); }
+.act-detail-block {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+  display: none;
+}
+.act-detail-title { font-size: 20px; font-weight: 700; color: var(--paper); margin-bottom: 8px; }
+.act-detail-desc { font-size: 14px; color: var(--grey-40); line-height: 1.65; margin-bottom: 20px; }
+.act-detail-price-tag {
+  display: inline-block;
+  background: rgba(99,172,229,.12);
+  border: 1px solid rgba(99,172,229,.3);
+  border-radius: var(--r-sm);
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--coastline);
+  margin-bottom: 20px;
+}
+.act-photos { columns: 2; column-gap: 8px; }
+.act-photos img { width:100%; display:block; border-radius:var(--r-md); margin-bottom:8px; }
+
 </style>
 </head>
 <body>
@@ -958,23 +1018,28 @@ footer {
       <div class="option-sub">Dos grupos de 30, cada uno con su propia experiencia completa de 4d/3n en la misma semana.</div>
       <div class="option-price-preview" style="flex-direction:column; align-items:flex-start; gap:8px;">
         <div style="display:flex; align-items:baseline; gap:6px;">
-          <span class="price-num">$1.050</span>
+          <span class="price-num" id="card-usd-A">$900</span>
           <span class="price-unit">/ persona</span>
         </div>
         <div style="display:flex; flex-direction:column; gap:4px; width:100%; padding-top:8px; border-top:1px solid var(--line);">
           <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Sin impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">$63.000</span>
+            <span>Sin impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-sin-A">$54.000</span>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">$78.435</span>
+            <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-con-A">$67.230</span>
           </div>
           <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
             <span>+ Vuelos grupo</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">~$19.530</span>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:12px;">
-            <span style="color:var(--grey-50);">Total con vuelos</span><span style="color:var(--paper); font-family:var(--font-sans); font-weight:700;">~$97.965</span>
+            <span style="color:var(--grey-50);">Total con vuelos</span><span style="color:var(--paper); font-family:var(--font-sans); font-weight:700;" id="card-total-A">~$86.760</span>
           </div>
         </div>
+      </div>
+      <!-- ── Actividad elegida ─────────────────────────────── -->
+      <div class="act-detail-block" id="act-detail-A">
+        <div class="section-label" style="margin-bottom:12px;">Actividad elegida</div>
+        <div id="act-detail-content-A"></div>
       </div>
     </div>
 
@@ -985,23 +1050,28 @@ footer {
       <div class="option-sub">Todo el grupo junto en las dos hosterías propias de Swell. Experiencia completa de 4 días / 3 noches.</div>
       <div class="option-price-preview" style="flex-direction:column; align-items:flex-start; gap:8px;">
         <div style="display:flex; align-items:baseline; gap:6px;">
-          <span class="price-num">$1.050</span>
+          <span class="price-num" id="card-usd-B">$900</span>
           <span class="price-unit">/ persona</span>
         </div>
         <div style="display:flex; flex-direction:column; gap:4px; width:100%; padding-top:8px; border-top:1px solid var(--line);">
           <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Sin impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">$63.000</span>
+            <span>Sin impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-sin-B">$54.000</span>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">$78.435</span>
+            <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-con-B">$67.230</span>
           </div>
           <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
             <span>+ Vuelos grupo</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">~$19.530</span>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:12px;">
-            <span style="color:var(--grey-50);">Total con vuelos</span><span style="color:var(--paper); font-family:var(--font-sans); font-weight:700;">~$97.965</span>
+            <span style="color:var(--grey-50);">Total con vuelos</span><span style="color:var(--paper); font-family:var(--font-sans); font-weight:700;" id="card-total-B">~$86.760</span>
           </div>
         </div>
+      </div>
+      <!-- ── Actividad elegida ─────────────────────────────── -->
+      <div class="act-detail-block" id="act-detail-B">
+        <div class="section-label" style="margin-bottom:12px;">Actividad elegida</div>
+        <div id="act-detail-content-B"></div>
       </div>
     </div>
 
@@ -1012,23 +1082,61 @@ footer {
       <div class="option-sub">Todo el grupo en una hostería en Cerro Catedral. 4 días / 3 noches con el mismo programa completo.</div>
       <div class="option-price-preview" style="flex-direction:column; align-items:flex-start; gap:8px;">
         <div style="display:flex; align-items:baseline; gap:6px;">
-          <span class="price-num">$1.250</span>
+          <span class="price-num" id="card-usd-C">$1.100</span>
           <span class="price-unit">/ persona</span>
         </div>
         <div style="display:flex; flex-direction:column; gap:4px; width:100%; padding-top:8px; border-top:1px solid var(--line);">
           <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Sin impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">$75.000</span>
+            <span>Sin impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-sin-C">$66.000</span>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">$93.375</span>
+            <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-con-C">$82.170</span>
           </div>
           <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
             <span>+ Vuelos grupo</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">~$19.530</span>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:12px;">
-            <span style="color:var(--grey-50);">Total con vuelos</span><span style="color:var(--paper); font-family:var(--font-sans); font-weight:700;">~$112.905</span>
+            <span style="color:var(--grey-50);">Total con vuelos</span><span style="color:var(--paper); font-family:var(--font-sans); font-weight:700;" id="card-total-C">~$101.700</span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── Selector de actividad ────────────────────────────── -->
+  <div class="act-selector">
+    <div class="section-label" style="margin-bottom:6px;">Experiencia extra</div>
+    <div style="font-size:13px; color:var(--grey-60); margin-bottom:16px;">Elegí la actividad que suma el grupo · el precio se agrega al paquete</div>
+    <div class="act-grid">
+      <div class="act-card act-none selected" id="act-none" onclick="selectActivity('none')">
+        <div class="act-card-name">Sin actividad extra</div>
+        <div class="act-card-price" style="color:var(--grey-60);">— incluido en precio base</div>
+      </div>
+      <div class="act-card" id="act-4x4" onclick="selectActivity('4x4')">
+        <div class="act-card-name">4x4 + trekking con raqueta</div>
+        <div class="act-card-price">$220 USD / persona</div>
+      </div>
+      <div class="act-card" id="act-cabalgata" onclick="selectActivity('cabalgata')">
+        <div class="act-card-name">Cabalgata + asado</div>
+        <div class="act-card-price">$170 USD / persona</div>
+      </div>
+      <div class="act-card" id="act-kundo" onclick="selectActivity('kundo')" style="display:none;">
+        <div class="act-card-name">Navegada con Kundo</div>
+        <div class="act-card-price">$4.020 USD · grupo 30 pax</div>
+        <div class="act-card-badge">Solo Opción A</div>
+      </div>
+      <div class="act-card" id="act-moto60" onclick="selectActivity('moto60')">
+        <div class="act-card-name">Moto de nieve · 60 min</div>
+        <div class="act-card-price">$180 USD / persona</div>
+      </div>
+      <div class="act-card" id="act-moto270" onclick="selectActivity('moto270')">
+        <div class="act-card-name">Moto de nieve + almuerzo · 2.5 hs</div>
+        <div class="act-card-price">$270 USD / persona</div>
+      </div>
+      <div class="act-card" id="act-cascada" onclick="selectActivity('cascada')">
+        <div class="act-card-name">Cascada del Duende + almuerzo</div>
+        <div class="act-card-price">$100 USD / persona</div>
       </div>
     </div>
   </div>
@@ -1045,8 +1153,8 @@ footer {
           <div class="detail-desc">Dos grupos de 30 personas que se turnan en la misma semana en nuestra Swell Snow House. Cada grupo tiene su propio programa personalizado, con el nivel de atención que solo es posible con grupos más pequeños.</div>
         </div>
         <div class="price-block">
-          <div class="price-main"><span>USD</span> <span id="price-main-a">1.050</span></div>
-          <div class="price-total">por persona · <span id="price-total-a">$63.000 sin imp. · $78.435 con imp.</span><br><span style="font-size:12px;color:var(--grey-60);">+ vuelos grupo ~$19.530 &nbsp;·&nbsp; total con vuelos ~$97.965</span></div>
+          <div class="price-main"><span>USD</span> <span id="price-main-a">900</span></div>
+          <div class="price-total">por persona · <span id="price-total-a">$54.000 sin imp. · $67.230 con imp.</span><br><span style="font-size:12px;color:var(--grey-60);">+ vuelos grupo ~$19.530 &nbsp;·&nbsp; <span id="detail-total-a">total con vuelos ~$86.760</span></span></div>
         </div>
       </div>
 
@@ -1086,7 +1194,7 @@ footer {
         <div class="include-card" data-fade><div class="include-icon">🎿</div><div class="include-text"><div class="include-name">Ski pass</div><div class="include-sub">2 días · Cerro Catedral</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🧤</div><div class="include-text"><div class="include-name">Equipo y casco</div><div class="include-sub">Ski o snowboard · casco incluido</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🚐</div><div class="include-text"><div class="include-name">Transfer privado</div><div class="include-sub">Ida y vuelta Bariloche</div></div></div>
-        <div class="include-card" data-fade><div class="include-icon">🏔</div><div class="include-text"><div class="include-name">Actividad extra</div><div class="include-sub">Trekking por la montaña o navegada por el lago Nahuel Huapi · Incl. almuerzo y transfer</div></div></div>
+        <div class="include-card" data-fade><div class="include-icon">🏔</div><div class="include-text"><div class="include-name">Actividad extra</div><div class="include-sub">A elegir entre las experiencias opcionales · almuerzo y transfer incluidos</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🗺</div><div class="include-text"><div class="include-name">Coordinación de montaña</div><div class="include-sub">Staff experto · mejores líneas según nivel</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🏠</div><div class="include-text"><div class="include-name">After en Swell</div><div class="include-sub">Noche de llegada · Snow House</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🎧</div><div class="include-text"><div class="include-name">After ski · venue</div><div class="include-sub"></div></div></div>
@@ -1211,8 +1319,8 @@ footer {
           <div class="detail-desc">Todo el grupo junto en las dos hosterías propias de Swell. Programa unificado de 4 días / 3 noches: ski, actividad extra, after ski. Cada casa con su propia dinámica personalizada.</div>
         </div>
         <div class="price-block">
-          <div class="price-main"><span>USD</span> <span id="price-main-b">1.050</span></div>
-          <div class="price-total">por persona · <span id="price-total-b">$63.000 sin imp. · $78.435 con imp.</span><br><span style="font-size:12px;color:var(--grey-60);">+ vuelos grupo ~$19.530 &nbsp;·&nbsp; total con vuelos ~$97.965</span></div>
+          <div class="price-main"><span>USD</span> <span id="price-main-b">900</span></div>
+          <div class="price-total">por persona · <span id="price-total-b">$54.000 sin imp. · $67.230 con imp.</span><br><span style="font-size:12px;color:var(--grey-60);">+ vuelos grupo ~$19.530 &nbsp;·&nbsp; <span id="detail-total-b">total con vuelos ~$86.760</span></span></div>
         </div>
       </div>
 
@@ -1247,7 +1355,7 @@ footer {
         <div class="include-card" data-fade><div class="include-icon">🎿</div><div class="include-text"><div class="include-name">Ski pass</div><div class="include-sub">2 días · Cerro Catedral</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🧤</div><div class="include-text"><div class="include-name">Equipo y casco</div><div class="include-sub">Ski o snowboard · casco incluido</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🚐</div><div class="include-text"><div class="include-name">Transfer privado</div><div class="include-sub">Ida y vuelta Bariloche</div></div></div>
-        <div class="include-card" data-fade><div class="include-icon">🏔</div><div class="include-text"><div class="include-name">Actividad extra</div><div class="include-sub">Trekking por la montaña o navegada por el lago Nahuel Huapi · Incl. almuerzo y transfer</div></div></div>
+        <div class="include-card" data-fade><div class="include-icon">🏔</div><div class="include-text"><div class="include-name">Actividad extra</div><div class="include-sub">A elegir entre las experiencias opcionales · almuerzo y transfer incluidos</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🗺</div><div class="include-text"><div class="include-name">Coordinación de montaña</div><div class="include-sub">Staff experto · mejores líneas según nivel</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🏠</div><div class="include-text"><div class="include-name">After en Swell</div><div class="include-sub">Noche de llegada · Snow House</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🎧</div><div class="include-text"><div class="include-name">After ski · venue</div><div class="include-sub"></div></div></div>
@@ -1314,8 +1422,8 @@ footer {
           <div class="detail-desc">Todo el grupo en una hostería en Cerro Catedral. Mismo programa de 4 días / 3 noches. Precio sujeto a disponibilidad y cotización.</div>
         </div>
         <div class="price-block">
-          <div class="price-main"><span>USD</span> <span id="price-main-c">1.250</span></div>
-          <div class="price-total">por persona · <span id="price-total-c">$75.000 sin imp. · $93.375 con imp.</span><br><span style="font-size:12px;color:var(--grey-60);">+ vuelos grupo ~$19.530 &nbsp;·&nbsp; total con vuelos ~$112.905</span></div>
+          <div class="price-main"><span>USD</span> <span id="price-main-c">1.100</span></div>
+          <div class="price-total">por persona · <span id="price-total-c">$66.000 sin imp. · $82.170 con imp.</span><br><span style="font-size:12px;color:var(--grey-60);">+ vuelos grupo ~$19.530 &nbsp;·&nbsp; <span id="detail-total-c">total con vuelos ~$101.700</span></span></div>
         </div>
       </div>
 
@@ -1350,7 +1458,7 @@ footer {
         <div class="include-card" data-fade><div class="include-icon">🎿</div><div class="include-text"><div class="include-name">Ski pass</div><div class="include-sub">2 días · Cerro Catedral</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🧤</div><div class="include-text"><div class="include-name">Equipo y casco</div><div class="include-sub">Ski o snowboard · casco incluido</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🚐</div><div class="include-text"><div class="include-name">Transfer privado</div><div class="include-sub">Ida y vuelta Bariloche</div></div></div>
-        <div class="include-card" data-fade><div class="include-icon">🏔</div><div class="include-text"><div class="include-name">Actividad extra</div><div class="include-sub">Trekking por la montaña o navegada por el lago Nahuel Huapi · Incl. almuerzo y transfer</div></div></div>
+        <div class="include-card" data-fade><div class="include-icon">🏔</div><div class="include-text"><div class="include-name">Actividad extra</div><div class="include-sub">A elegir entre las experiencias opcionales · almuerzo y transfer incluidos</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🗺</div><div class="include-text"><div class="include-name">Coordinación de montaña</div><div class="include-sub">Staff experto · mejores líneas según nivel</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🏠</div><div class="include-text"><div class="include-name">After en Swell</div><div class="include-sub">Noche de llegada · Snow House</div></div></div>
         <div class="include-card" data-fade><div class="include-icon">🎧</div><div class="include-text"><div class="include-name">After ski · venue</div><div class="include-sub"></div></div></div>
@@ -1406,8 +1514,12 @@ footer {
           </div>
         </div>
       </div>
-    </div>
 
+      <!-- ── Actividad elegida ─────────────────────────────── -->
+      <div class="act-detail-block" id="act-detail-C">
+        <div class="section-label" style="margin-bottom:12px;">Actividad elegida</div>
+        <div id="act-detail-content-C"></div>
+      </div>
   </div><!-- /detail-panel -->
 </section>
 
@@ -1607,13 +1719,17 @@ function selectOption(opt) {
     document.getElementById('card-' + o.toLowerCase()).classList.toggle('selected', o === opt);
     document.getElementById('detail-' + o).style.display = o === opt ? 'block' : 'none';
   });
-  // Stats: opción A muestra split (2 grupos), B y C muestran grupo unificado
   const isA = opt === 'A';
   document.getElementById('stats-unified').style.display = isA ? 'none' : 'flex';
   document.getElementById('stats-split').style.display = isA ? 'flex' : 'none';
   document.getElementById('hero-subtitle').textContent = isA
     ? 'Bariloche · 30 + 30 personas · 4 días / 3 noches'
     : 'Bariloche · 60 personas · 4 días / 3 noches';
+  // Kundo solo aparece en Opción A
+  var kundoCard = document.getElementById('act-kundo');
+  if (kundoCard) kundoCard.style.display = isA ? 'flex' : 'none';
+  if (!isA && currentActivity === 'kundo') selectActivity('none');
+  else updateActivityPrices();
 }
 
 function switchGroup(id) {
@@ -1687,6 +1803,158 @@ function adj(key, delta) {
     }
   };
 })();
+
+
+// ── Activity selector ─────────────────────────────────────
+var BASE_USD = { A: 900, B: 900, C: 1100 };
+var ARS_RATE = 60;
+var IMP_MULT = 1.245;
+var VUELOS_USD = 19530;
+var currentActivity = 'none';
+
+var ACT_DATA = {
+  'none': {
+    name: '',
+    price: 0,
+    fixed: false,
+    fixedTotal: 0,
+    pax: 60,
+    desc: '',
+    onlyA: false,
+    photos: []
+  },
+  '4x4': {
+    name: 'Excursión 4x4 + trekking con raqueta',
+    price: 220,
+    fixed: false,
+    pax: 60,
+    desc: 'Un día de aventura fuera de la pista: recorrido en 4x4 por senderos de montaña patagónica y trekking con raquetas de nieve. Paisajes únicos, guía experto y todo el equipo incluido.',
+    onlyA: false,
+    photos: ['img/actividades/4x4-raqueta/']
+  },
+  'cabalgata': {
+    name: 'Cabalgata + asado',
+    price: 170,
+    fixed: false,
+    pax: 60,
+    desc: 'Cabalgata por el bosque andino nevado con vistas a la cordillera, seguida de un asado típico patagónico. Una experiencia auténtica y relajada para después del ski.',
+    onlyA: false,
+    photos: ['img/actividades/cabalgata/']
+  },
+  'kundo': {
+    name: 'Navegada con Kundo · Nahuel Huapi',
+    price: 0,
+    fixed: true,
+    fixedTotal: 4020,
+    pax: 30,
+    desc: 'Navegación exclusiva por el Lago Nahuel Huapi con parada en Isla Victoria. Gastronomía premium a bordo, vistas de la cordillera desde el agua y una experiencia diseñada para 30 personas. Disponible solo en Opción A.',
+    onlyA: true,
+    photos: ['img/actividades/navegada-kundo/']
+  },
+  'moto60': {
+    name: 'Moto de nieve · 60 min',
+    price: 180,
+    fixed: false,
+    pax: 60,
+    desc: '60 minutos de moto de nieve por los senderos de Cerro Catedral. Velocidad, adrenalina y nieve en estado puro. Dos personas por moto — la dosis justa de adrenalina post-ski.',
+    onlyA: false,
+    photos: ['img/actividades/moto-nieve/']
+  },
+  'moto270': {
+    name: 'Moto de nieve + almuerzo gourmet · 2.5 hs',
+    price: 270,
+    fixed: false,
+    pax: 60,
+    desc: 'La versión extendida: 2.5 horas en moto de nieve con más recorrido, más terreno y almuerzo gourmet en la montaña. Para los que quieren más.',
+    onlyA: false,
+    photos: ['img/actividades/moto-nieve/']
+  },
+  'cascada': {
+    name: 'Cascada del Duende + almuerzo en montaña',
+    price: 100,
+    fixed: false,
+    pax: 60,
+    desc: 'Caminata guiada por el bosque andino hasta la Cascada del Duende, con almuerzo en la montaña incluido. La experiencia más contemplativa del menú — ideal para complementar dos días de ski.',
+    onlyA: false,
+    photos: ['img/actividades/cascada-duende/']
+  }
+};
+
+function fmt(n) {
+  return n.toLocaleString('es-AR');
+}
+
+function selectActivity(key) {
+  currentActivity = key;
+  // Mark cards
+  var cards = ['none','4x4','cabalgata','kundo','moto60','moto270','cascada'];
+  cards.forEach(function(k) {
+    var el = document.getElementById('act-' + k);
+    if (el) el.classList.toggle('selected', k === key);
+  });
+
+  // Update prices for current option
+  updateActivityPrices();
+
+  // Update detail block
+  ['A','B','C'].forEach(function(o) {
+    var block = document.getElementById('act-detail-' + o);
+    if (!block) return;
+    var act = ACT_DATA[key];
+    if (!act || key === 'none') {
+      block.style.display = 'none';
+      return;
+    }
+    block.style.display = 'block';
+    var priceLabel = act.fixed
+      ? 'USD ' + fmt(act.fixedTotal) + ' · grupo ' + act.pax + ' pax'
+      : 'USD ' + fmt(act.price) + ' / persona';
+    document.getElementById('act-detail-content-' + o).innerHTML =
+      '<div class="act-detail-title">' + act.name + '</div>' +
+      '<div class="act-detail-desc">' + act.desc + '</div>' +
+      '<div class="act-detail-price-tag">' + priceLabel + '</div>';
+  });
+}
+
+function updateActivityPrices() {
+  var opt = currentOption;
+  if (!opt || !ACT_DATA) return;
+  var act = ACT_DATA[currentActivity] || ACT_DATA['none'];
+  var baseUsd = BASE_USD[opt];
+  var actUsd = act.fixed ? (act.fixedTotal / act.pax) : act.price;
+  var totalUsdPerson = baseUsd + actUsd;
+  var sinImp = totalUsdPerson * ARS_RATE;
+  var conImp = Math.round(sinImp * IMP_MULT);
+  var totalConVuelos = conImp * 60 + VUELOS_USD;  // group total
+  // Actually keep display consistent: sinImp/conImp are per-person in ARS, totalConVuelos is group USD-equivalent
+  // Use same format as before
+  var sinImpGroup = totalUsdPerson * 60;
+  var conImpGroup = Math.round(sinImpGroup * IMP_MULT);
+  var totalGroup = conImpGroup + VUELOS_USD;
+
+  // Update detail panel price-total
+  var ptEl = document.getElementById('price-total-' + opt.toLowerCase());
+  if (ptEl) {
+    ptEl.textContent = '$' + fmt(sinImpGroup) + ' sin imp. · $' + fmt(conImpGroup) + ' con imp.';
+  }
+  // Update detail panel price-main (USD/person)
+  var pmEl = document.getElementById('price-main-' + opt.toLowerCase());
+  if (pmEl) pmEl.textContent = fmt(Math.round(totalUsdPerson));
+
+  // Update total-con-vuelos in detail
+  var dtEl = document.getElementById('detail-total-' + opt.toLowerCase());
+  if (dtEl) dtEl.textContent = 'total con vuelos ~$' + fmt(totalGroup);
+
+  // Update option card prices
+  var cUsd = document.getElementById('card-usd-' + opt);
+  if (cUsd) cUsd.textContent = '$' + fmt(Math.round(totalUsdPerson));
+  var cSin = document.getElementById('card-sin-' + opt);
+  if (cSin) cSin.textContent = '$' + fmt(sinImpGroup);
+  var cCon = document.getElementById('card-con-' + opt);
+  if (cCon) cCon.textContent = '$' + fmt(conImpGroup);
+  var cTot = document.getElementById('card-total-' + opt);
+  if (cTot) cTot.textContent = '~$' + fmt(totalGroup);
+}
 
 </script>
 </body>
