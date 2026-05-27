@@ -1028,7 +1028,10 @@ footer {
           <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
             <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-con-A">$67.230</span>
           </div>
-          <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
+<div id="card-act-A" style="display:none; justify-content:space-between; font-size:12px; color:var(--grey-60);">
+            <span>+ Actividad extra</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-act-val-A"></span>
+          </div>
+                    <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
             <span>+ Vuelos grupo</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">~$19.530</span>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:12px;">
@@ -1060,7 +1063,10 @@ footer {
           <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
             <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-con-B">$67.230</span>
           </div>
-          <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
+<div id="card-act-B" style="display:none; justify-content:space-between; font-size:12px; color:var(--grey-60);">
+            <span>+ Actividad extra</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-act-val-B"></span>
+          </div>
+                    <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
             <span>+ Vuelos grupo</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">~$19.530</span>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:12px;">
@@ -1092,7 +1098,10 @@ footer {
           <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
             <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-con-C">$82.170</span>
           </div>
-          <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
+<div id="card-act-C" style="display:none; justify-content:space-between; font-size:12px; color:var(--grey-60);">
+            <span>+ Actividad extra</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-act-val-C"></span>
+          </div>
+                    <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
             <span>+ Vuelos grupo</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">~$19.530</span>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:12px;">
@@ -1917,43 +1926,43 @@ function selectActivity(key) {
 }
 
 function updateActivityPrices() {
-  var opt = currentOption;
-  if (!opt || !ACT_DATA) return;
+  if (!ACT_DATA) return;
   var act = ACT_DATA[currentActivity] || ACT_DATA['none'];
-  var baseUsd = BASE_USD[opt];
-  var actUsd = act.fixed ? (act.fixedTotal / act.pax) : act.price;
-  var totalUsdPerson = baseUsd + actUsd;
-  var sinImp = totalUsdPerson * ARS_RATE;
-  var conImp = Math.round(sinImp * IMP_MULT);
-  var totalConVuelos = conImp * 60 + VUELOS_USD;  // group total
-  // Actually keep display consistent: sinImp/conImp are per-person in ARS, totalConVuelos is group USD-equivalent
-  // Use same format as before
-  var sinImpGroup = totalUsdPerson * 60;
-  var conImpGroup = Math.round(sinImpGroup * IMP_MULT);
-  var totalGroup = conImpGroup + VUELOS_USD;
-
-  // Update detail panel price-total
-  var ptEl = document.getElementById('price-total-' + opt.toLowerCase());
-  if (ptEl) {
-    ptEl.textContent = '$' + fmt(sinImpGroup) + ' sin imp. · $' + fmt(conImpGroup) + ' con imp.';
-  }
-  // Update detail panel price-main (USD/person)
-  var pmEl = document.getElementById('price-main-' + opt.toLowerCase());
-  if (pmEl) pmEl.textContent = fmt(Math.round(totalUsdPerson));
-
-  // Update total-con-vuelos in detail
-  var dtEl = document.getElementById('detail-total-' + opt.toLowerCase());
-  if (dtEl) dtEl.textContent = 'total con vuelos ~$' + fmt(totalGroup);
-
-  // Update option card prices
-  var cUsd = document.getElementById('card-usd-' + opt);
-  if (cUsd) cUsd.textContent = '$' + fmt(Math.round(totalUsdPerson));
-  var cSin = document.getElementById('card-sin-' + opt);
-  if (cSin) cSin.textContent = '$' + fmt(sinImpGroup);
-  var cCon = document.getElementById('card-con-' + opt);
-  if (cCon) cCon.textContent = '$' + fmt(conImpGroup);
-  var cTot = document.getElementById('card-total-' + opt);
-  if (cTot) cTot.textContent = '~$' + fmt(totalGroup);
+  var hasAct = currentActivity && currentActivity !== 'none';
+  ['A','B','C'].forEach(function(opt) {
+    var baseUsd = BASE_USD[opt];
+    var actUsd = 0;
+    if (hasAct) {
+      actUsd = act.fixed ? (opt === 'A' ? act.fixedTotal / act.pax : 0) : act.price;
+    }
+    var totalUsdPerson = baseUsd + actUsd;
+    var sinImpGroup = totalUsdPerson * 60;
+    var conImpGroup = Math.round(sinImpGroup * IMP_MULT);
+    var totalGroup = conImpGroup + VUELOS_USD;
+    var el;
+    // Option card prices
+    el = document.getElementById('card-usd-' + opt); if (el) el.textContent = '$' + fmt(Math.round(totalUsdPerson));
+    el = document.getElementById('card-sin-' + opt); if (el) el.textContent = '$' + fmt(sinImpGroup);
+    el = document.getElementById('card-con-' + opt); if (el) el.textContent = '$' + fmt(conImpGroup);
+    el = document.getElementById('card-total-' + opt); if (el) el.textContent = '~$' + fmt(totalGroup);
+    // Activity row in card
+    var actRow = document.getElementById('card-act-' + opt);
+    var actVal = document.getElementById('card-act-val-' + opt);
+    if (actRow) {
+      if (hasAct && actUsd > 0) {
+        actRow.style.display = 'flex';
+        if (actVal) actVal.textContent = act.fixed ? '~$' + fmt(act.fixedTotal) + ' fijo' : '~$' + fmt(actUsd * 60) + ' grupo';
+      } else {
+        actRow.style.display = 'none';
+      }
+    }
+    // Detail panel (only current option)
+    if (opt === currentOption) {
+      el = document.getElementById('price-total-' + opt.toLowerCase()); if (el) el.textContent = '$' + fmt(sinImpGroup) + ' sin imp. · $' + fmt(conImpGroup) + ' con imp.';
+      el = document.getElementById('price-main-' + opt.toLowerCase()); if (el) el.textContent = fmt(Math.round(totalUsdPerson));
+      el = document.getElementById('detail-total-' + opt.toLowerCase()); if (el) el.textContent = 'total con vuelos ~$' + fmt(totalGroup);
+    }
+  });
 }
 
 </script>
