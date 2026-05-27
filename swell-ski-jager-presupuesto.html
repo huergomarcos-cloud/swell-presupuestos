@@ -865,6 +865,16 @@ footer {
 .act-photos { columns: 2; column-gap: 8px; }
 .act-photos img { width:100%; display:block; border-radius:var(--r-md); margin-bottom:8px; }
 
+/* ── Galería alojamiento ── */
+.aloj-gallery { margin: 32px 0 0; }
+.aloj-gallery .section-label { margin-bottom: 8px; }
+.aloj-house-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--grey-60); margin: 16px 0 8px; }
+.aloj-house-label:first-child { margin-top: 0; }
+.aloj-main-photo { width: 100%; border-radius: var(--r-md); display: block; margin-bottom: 8px; object-fit: cover; max-height: 340px; }
+.aloj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.aloj-grid img { width: 100%; border-radius: var(--r-sm); display: block; object-fit: cover; aspect-ratio: 4/3; }
+@media (max-width: 600px) { .aloj-grid { grid-template-columns: repeat(2, 1fr); } }
+
 </style>
 </head>
 <body>
@@ -1113,10 +1123,13 @@ footer {
   </div>
 
 
+  <!-- ── Galería alojamiento ────────────────────────────── -->
+  <div class="aloj-gallery" id="aloj-gallery"></div>
+
   <!-- ── Selector de actividad ────────────────────────────── -->
   <div class="act-selector">
     <div class="section-label" style="margin-bottom:6px;">Experiencia extra</div>
-    <div style="font-size:13px; color:var(--grey-60); margin-bottom:16px;">Elegí la actividad que suma el grupo · el precio se agrega al paquete</div>
+    <div style="font-size:13px; color:var(--grey-60); margin-bottom:16px;" id="act-selector-note">Elegí la actividad que suma el grupo · el precio se agrega al paquete</div>
     <div class="act-grid">
       <div class="act-card act-none selected" id="act-none" onclick="selectActivity('none')">
         <div class="act-card-name">Sin actividad extra</div>
@@ -1737,8 +1750,39 @@ function selectOption(opt) {
   // Kundo solo aparece en Opción A
   var kundoCard = document.getElementById('act-kundo');
   if (kundoCard) kundoCard.style.display = isA ? 'flex' : 'none';
+  // Nota 30 pax en selector de actividad
+  var selectorNote = document.getElementById('act-selector-note');
+  if (selectorNote) {
+    selectorNote.innerHTML = isA
+      ? 'Elegí la actividad que suma el grupo · el precio se agrega al paquete<br><span style="color:var(--coastline);font-weight:600;">✦ Con 30 personas la experiencia es muchísimo más íntima y auténtica</span>'
+      : 'Elegí la actividad que suma el grupo · el precio se agrega al paquete';
+  }
+  // Galería de alojamiento
+  updateAlojGallery(opt);
   if (!isA && currentActivity === 'kundo') selectActivity('none');
   else updateActivityPrices();
+}
+
+function updateAlojGallery(opt) {
+  var gallery = document.getElementById('aloj-gallery');
+  if (!gallery || !ALOJ_DATA) return;
+  var data = ALOJ_DATA[opt];
+  if (!data) { gallery.innerHTML = ''; return; }
+  var html = '<div class="section-label">' + data.label + '</div>';
+  data.houses.forEach(function(house) {
+    if (data.houses.length > 1) {
+      html += '<div class="aloj-house-label">' + house.name + '</div>';
+    }
+    html += '<img class="aloj-main-photo" src="' + house.main + '" loading="lazy" alt="' + house.name + '">';
+    if (house.rest.length) {
+      html += '<div class="aloj-grid">';
+      house.rest.forEach(function(src) {
+        html += '<img src="' + src + '" loading="lazy" alt="">';
+      });
+      html += '</div>';
+    }
+  });
+  gallery.innerHTML = html;
 }
 
 function switchGroup(id) {
@@ -1748,8 +1792,6 @@ function switchGroup(id) {
   document.getElementById('group-g1').classList.toggle('active', id === 'g1');
   document.getElementById('group-g2').classList.toggle('active', id === 'g2');
 }
-
-selectOption('A');
 
 // Hero slideshow
 (function() {
@@ -1814,6 +1856,37 @@ function adj(key, delta) {
 })();
 
 
+// ── Accommodation gallery ─────────────────────────────────
+var ALOJ_DATA = {
+  A: {
+    label: 'Swell Bariloche · Casa privada · 30 pax',
+    houses: [{
+      name: 'Swell Bariloche',
+      main: 'img/alojamiento/bariloche/principal.jpg',
+      rest: ['img/alojamiento/bariloche/gs-24.jpg','img/alojamiento/bariloche/gs-93.jpg','img/alojamiento/bariloche/gs-103.jpg']
+    }]
+  },
+  B: {
+    label: 'Dos Swell Houses · 30 + 30 pax',
+    houses: [
+      {
+        name: 'Swell Bariloche',
+        main: 'img/alojamiento/bariloche/principal.jpg',
+        rest: ['img/alojamiento/bariloche/gs-24.jpg','img/alojamiento/bariloche/gs-93.jpg','img/alojamiento/bariloche/gs-103.jpg']
+      },
+      {
+        name: 'Swell Snow House',
+        main: 'img/alojamiento/snow-house/principal.jpg',
+        rest: ['img/alojamiento/snow-house/comedor.jpg','img/alojamiento/snow-house/jacuzzi.jpg','img/alojamiento/snow-house/living.jpg','img/alojamiento/snow-house/habitacion.jpg']
+      }
+    ]
+  },
+  C: {
+    label: 'Hostería · 60 pax',
+    houses: []
+  }
+};
+
 // ── Activity selector ─────────────────────────────────────
 var BASE_USD = { A: 900, B: 900, C: 1100 };
 var ARS_RATE = 60;
@@ -1856,7 +1929,7 @@ var ACT_DATA = {
     fixed: true,
     fixedTotal: 4020,
     pax: 30,
-    desc: 'Navegación exclusiva por el Lago Nahuel Huapi con parada en Isla Victoria. Gastronomía premium a bordo, vistas de la cordillera desde el agua y una experiencia diseñada para 30 personas. Disponible solo en Opción A.',
+    desc: 'Navegación exclusiva por el Lago Nahuel Huapi con parada en Isla Victoria. Gastronomía premium a bordo, vistas de la cordillera desde el agua. Esta experiencia tiene cupo máximo de 30 personas — solo disponible en Opción A, que divide al grupo en dos mitades.',
     onlyA: true,
     photos: ['img/actividades/navegada-kundo/']
   },
@@ -1892,6 +1965,9 @@ var ACT_DATA = {
 function fmt(n) {
   return n.toLocaleString('es-AR');
 }
+
+selectOption('A');
+
 
 function selectActivity(key) {
   currentActivity = key;
