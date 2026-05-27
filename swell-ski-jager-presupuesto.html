@@ -767,9 +767,61 @@ footer {
 [data-fade-delay="3"] { transition-delay: 0.24s; }
 [data-fade-delay="4"] { transition-delay: 0.32s; }
 [data-fade-delay="5"] { transition-delay: 0.40s; }
+
+/* ── Password gate ───────────────────────────────────── */
+#pw-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+}
+#pw-gate.hidden { display: none; }
+.pw-box {
+  display: flex; flex-direction: column; align-items: center; gap: 24px;
+  width: 100%; max-width: 340px; padding: 0 24px;
+}
+.pw-logo { font-size: 13px; letter-spacing: 0.18em; color: var(--grey-60); text-transform: uppercase; }
+.pw-title { font-family: var(--font-serif); font-size: 28px; color: var(--paper); text-align: center; line-height: 1.2; }
+.pw-input-wrap { width: 100%; position: relative; }
+.pw-input {
+  width: 100%; padding: 14px 16px; box-sizing: border-box;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-md); color: var(--paper);
+  font-size: 15px; font-family: var(--font-sans); letter-spacing: 0.06em;
+  outline: none; transition: border-color 0.2s;
+}
+.pw-input:focus { border-color: var(--grey-50); }
+.pw-input.error { border-color: #e05; animation: shake 0.3s; }
+.pw-btn {
+  width: 100%; padding: 14px; background: var(--paper); color: var(--ink);
+  border: none; border-radius: var(--r-md); font-size: 14px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.pw-btn:hover { opacity: 0.85; }
+.pw-error { font-size: 12px; color: #e05; height: 16px; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
 </style>
 </head>
 <body>
+<!-- ── Password gate ─────────────────────────────────── -->
+<div id="pw-gate">
+  <div class="pw-box">
+    <div class="pw-logo">Swell × Jägermeister</div>
+    <div class="pw-title">Propuesta Ski 2026</div>
+    <div class="pw-input-wrap">
+      <input class="pw-input" id="pw-input" type="password" placeholder="Contraseña" autocomplete="current-password">
+    </div>
+    <button class="pw-btn" onclick="checkPw()">Ingresar</button>
+    <div class="pw-error" id="pw-error"></div>
+  </div>
+</div>
+
+
 
 
 <!-- ── Nav ────────────────────────────────────────────── -->
@@ -1611,6 +1663,31 @@ function adj(key, delta) {
   }, { threshold: 0.08 });
   els.forEach(function(el) { io.observe(el); });
 })();
+
+// Password gate
+(function() {
+  var PW = 'swellyjager';
+  var KEY = 'swell_jager_auth';
+  if (sessionStorage.getItem(KEY) === '1') {
+    document.getElementById('pw-gate').classList.add('hidden');
+  }
+  document.getElementById('pw-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPw();
+  });
+  window.checkPw = function() {
+    var val = document.getElementById('pw-input').value;
+    if (val === PW) {
+      sessionStorage.setItem(KEY, '1');
+      document.getElementById('pw-gate').classList.add('hidden');
+    } else {
+      var inp = document.getElementById('pw-input');
+      inp.classList.add('error');
+      document.getElementById('pw-error').textContent = 'Contraseña incorrecta';
+      setTimeout(function() { inp.classList.remove('error'); }, 400);
+    }
+  };
+})();
+
 </script>
 </body>
 </html>
