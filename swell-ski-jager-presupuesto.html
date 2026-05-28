@@ -871,8 +871,33 @@ footer {
   color: var(--coastline);
   margin-bottom: 20px;
 }
-.act-photos { columns: 2; column-gap: 8px; }
-.act-photos img { width:100%; display:block; border-radius:var(--r-md); margin-bottom:8px; }
+.act-photos { display:grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top:16px; }
+.act-photos img { width:100%; display:block; border-radius:var(--r-sm); object-fit:cover; aspect-ratio:1; }
+@media (max-width:600px) { .act-photos { grid-template-columns: repeat(3,1fr); } }
+
+/* ── Resumen de selección ── */
+.summary-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 28px 32px;
+  max-width: 520px;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.summary-row:last-child { border-bottom: none; }
+.summary-label { color: var(--grey-60); }
+.summary-val { font-weight: 600; color: var(--paper); text-align: right; }
+.summary-row.summary-total { margin-top: 4px; padding-top: 16px; border-top: 2px solid var(--coastline); border-bottom: none; }
+.summary-row.summary-total .summary-label { color: var(--paper); font-weight: 700; font-size: 15px; }
+.summary-row.summary-total .summary-val { font-size: 20px; color: var(--coastline); font-weight: 800; font-family: var(--font-sans); }
 
 /* ── Galería alojamiento ── */
 .aloj-gallery { margin: 32px 0 0; }
@@ -1035,34 +1060,7 @@ footer {
       <div class="option-badge badge-letter">Opción A</div>
       <div class="option-name">30 + 30 · Swell Snow House</div>
       <div class="option-sub">Dos grupos de 30, cada uno con su propia experiencia completa de 4d/3n en la misma semana.</div>
-      <div class="option-price-preview" style="flex-direction:column; align-items:flex-start; gap:8px;">
-        <div style="display:flex; align-items:baseline; gap:6px;">
-          <span class="price-num" id="card-usd-A">$900</span>
-          <span class="price-unit">/ persona</span>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:4px; width:100%; padding-top:8px; border-top:1px solid var(--line);">
-          <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Sin impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-sin-A">$54.000</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-con-A">$67.230</span>
-          </div>
-<div id="card-act-A" style="display:none; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>+ Actividad extra</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-act-val-A"></span>
-          </div>
-                    <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>+ Vuelos grupo</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">~$19.530</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:12px;">
-            <span style="color:var(--grey-50);">Total con vuelos</span><span style="color:var(--paper); font-family:var(--font-sans); font-weight:700;" id="card-total-A">~$86.760</span>
-          </div>
-        </div>
-      </div>
-      <!-- ── Actividad elegida ─────────────────────────────── -->
-      <div class="act-detail-block" id="act-detail-A">
-        <div class="section-label" style="margin-bottom:12px;">Actividad elegida</div>
-        <div id="act-detail-content-A"></div>
-      </div>
+
     </div>
 
     <!-- Opción B -->
@@ -1070,34 +1068,7 @@ footer {
       <div class="option-badge badge-letter">Opción B</div>
       <div class="option-name">60 pax · Dos Swell Snow Houses</div>
       <div class="option-sub">Todo el grupo junto en las dos hosterías propias de Swell. Experiencia completa de 4 días / 3 noches.</div>
-      <div class="option-price-preview" style="flex-direction:column; align-items:flex-start; gap:8px;">
-        <div style="display:flex; align-items:baseline; gap:6px;">
-          <span class="price-num" id="card-usd-B">$900</span>
-          <span class="price-unit">/ persona</span>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:4px; width:100%; padding-top:8px; border-top:1px solid var(--line);">
-          <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Sin impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-sin-B">$54.000</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-con-B">$67.230</span>
-          </div>
-<div id="card-act-B" style="display:none; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>+ Actividad extra</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-act-val-B"></span>
-          </div>
-                    <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>+ Vuelos grupo</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">~$19.530</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:12px;">
-            <span style="color:var(--grey-50);">Total con vuelos</span><span style="color:var(--paper); font-family:var(--font-sans); font-weight:700;" id="card-total-B">~$86.760</span>
-          </div>
-        </div>
-      </div>
-      <!-- ── Actividad elegida ─────────────────────────────── -->
-      <div class="act-detail-block" id="act-detail-B">
-        <div class="section-label" style="margin-bottom:12px;">Actividad elegida</div>
-        <div id="act-detail-content-B"></div>
-      </div>
+
     </div>
 
     <!-- Opción C -->
@@ -1105,29 +1076,7 @@ footer {
       <div class="option-badge badge-letter">Opción C</div>
       <div class="option-name">60 pax · Hostería para 60 pax</div>
       <div class="option-sub">Todo el grupo en una hostería en Cerro Catedral. 4 días / 3 noches con el mismo programa completo.</div>
-      <div class="option-price-preview" style="flex-direction:column; align-items:flex-start; gap:8px;">
-        <div style="display:flex; align-items:baseline; gap:6px;">
-          <span class="price-num" id="card-usd-C">$1.100</span>
-          <span class="price-unit">/ persona</span>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:4px; width:100%; padding-top:8px; border-top:1px solid var(--line);">
-          <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Sin impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-sin-C">$66.000</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>Con impuestos</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-con-C">$82.170</span>
-          </div>
-<div id="card-act-C" style="display:none; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>+ Actividad extra</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;" id="card-act-val-C"></span>
-          </div>
-                    <div style="margin-top:6px; padding-top:6px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:12px; color:var(--grey-60);">
-            <span>+ Vuelos grupo</span><span style="color:var(--grey-50); font-family:var(--font-sans); font-weight:600;">~$19.530</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:12px;">
-            <span style="color:var(--grey-50);">Total con vuelos</span><span style="color:var(--paper); font-family:var(--font-sans); font-weight:700;" id="card-total-C">~$101.700</span>
-          </div>
-        </div>
-      </div>
+
     </div>
   </div>
 
@@ -1147,7 +1096,7 @@ footer {
         </div>
       </div>
       <div class="act-card" id="act-4x4" onclick="selectActivity('4x4')">
-        <img class="act-card-thumb" src="img/actividades/4x4-raqueta/01.jpg" loading="lazy" alt="4x4">
+        <img class="act-card-thumb" src="img/actividades/4x4-raqueta/02.jpg" loading="lazy" alt="4x4">
         <div class="act-card-body">
           <div class="act-card-name">4x4 + trekking con raqueta</div>
           <div class="act-card-price">USD 220 / persona</div>
@@ -1169,21 +1118,21 @@ footer {
         </div>
       </div>
       <div class="act-card" id="act-moto60" onclick="selectActivity('moto60')">
-        <img class="act-card-thumb" src="img/actividades/moto-nieve/01.png" loading="lazy" alt="Moto de nieve">
+        <img class="act-card-thumb" src="img/actividades/moto-nieve/02.png" loading="lazy" alt="Moto de nieve">
         <div class="act-card-body">
           <div class="act-card-name">Moto de nieve · 60 min</div>
           <div class="act-card-price">USD 180 / persona</div>
         </div>
       </div>
       <div class="act-card" id="act-moto270" onclick="selectActivity('moto270')">
-        <img class="act-card-thumb" src="img/actividades/moto-nieve/02.png" loading="lazy" alt="Moto de nieve">
+        <img class="act-card-thumb" src="img/actividades/moto-nieve/03.png" loading="lazy" alt="Moto de nieve">
         <div class="act-card-body">
           <div class="act-card-name">Moto de nieve + almuerzo · 2.5 hs</div>
           <div class="act-card-price">USD 270 / persona</div>
         </div>
       </div>
       <div class="act-card" id="act-cascada" onclick="selectActivity('cascada')">
-        <img class="act-card-thumb" src="img/actividades/cascada-duende/01.jpg" loading="lazy" alt="Cascada">
+        <img class="act-card-thumb" src="img/actividades/cascada-duende/03.png" loading="lazy" alt="Cascada">
         <div class="act-card-body">
           <div class="act-card-name">Cascada del Duende + almuerzo</div>
           <div class="act-card-price">USD 50 / persona</div>
@@ -1359,6 +1308,11 @@ footer {
           </div>
         </div>
       </div>
+      <!-- ── Actividad elegida ─────────────────────────────── -->
+      <div class="act-detail-block" id="act-detail-A">
+        <div class="section-label" style="margin-bottom:12px;">Actividad elegida</div>
+        <div id="act-detail-content-A"></div>
+      </div>
     </div>
 
     <!-- Opción B -->
@@ -1461,6 +1415,11 @@ footer {
             <div class="day-item"><div class="day-dot"></div><span>Check-out</span></div>
           </div>
         </div>
+      </div>
+      <!-- ── Actividad elegida ─────────────────────────────── -->
+      <div class="act-detail-block" id="act-detail-B">
+        <div class="section-label" style="margin-bottom:12px;">Actividad elegida</div>
+        <div id="act-detail-content-B"></div>
       </div>
     </div>
 
@@ -1684,6 +1643,43 @@ footer {
   </div>
 
 
+</section>
+<div class="divider"></div>
+
+<!-- ── Resumen de selección ─────────────────────── -->
+<section>
+  <div class="section-label" data-fade>Tu selección</div>
+  <div class="section-title" data-fade data-fade-delay="1">Resumen del presupuesto</div>
+  <div class="summary-card" data-fade data-fade-delay="2">
+    <div class="summary-row">
+      <span class="summary-label">Modalidad</span>
+      <span class="summary-val" id="sum-opt-name">Opción A · Swell Snow House</span>
+    </div>
+    <div class="summary-row" id="sum-act-row">
+      <span class="summary-label">Actividad extra</span>
+      <span class="summary-val" id="sum-act-name">Sin actividad extra</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">USD / persona</span>
+      <span class="summary-val" id="sum-usd">$900</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">Sin impuestos · grupo</span>
+      <span class="summary-val" id="sum-sin">$54.000</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">Con impuestos · grupo</span>
+      <span class="summary-val" id="sum-con">$67.230</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">+ Vuelos grupo</span>
+      <span class="summary-val">~$19.530 USD</span>
+    </div>
+    <div class="summary-row summary-total">
+      <span class="summary-label">Total estimado</span>
+      <span class="summary-val" id="sum-total">~$86.760</span>
+    </div>
+  </div>
 </section>
 <div class="divider"></div>
 
@@ -1911,8 +1907,12 @@ var ALOJ_DATA = {
     ]
   },
   C: {
-    label: 'Hostería',
-    houses: []
+    label: 'Hostería · 60 pax',
+    houses: [{
+      name: 'Hostería',
+      main: 'img/alojamiento/hosteria/principal.jpg',
+      rest: ['img/alojamiento/hosteria/02.jpg','img/alojamiento/hosteria/03.jpg']
+    }]
   }
 };
 
@@ -1941,7 +1941,7 @@ var ACT_DATA = {
     pax: 60,
     desc: 'Un día de aventura fuera de la pista: recorrido en 4x4 por senderos de montaña patagónica y trekking con raquetas de nieve. Paisajes únicos, guía experto y todo el equipo incluido.',
     onlyA: false,
-    photos: ['img/actividades/4x4-raqueta/01.jpg','img/actividades/4x4-raqueta/02.jpg','img/actividades/4x4-raqueta/03.jpg']
+    photos: ['img/actividades/4x4-raqueta/02.jpg','img/actividades/4x4-raqueta/01.jpg','img/actividades/4x4-raqueta/03.jpg']
   },
   'cabalgata': {
     name: 'Cabalgata + asado',
@@ -1969,7 +1969,7 @@ var ACT_DATA = {
     pax: 60,
     desc: '60 minutos de moto de nieve por los senderos de Cerro Catedral. Velocidad, adrenalina y nieve en estado puro. Dos personas por moto — la dosis justa de adrenalina post-ski.',
     onlyA: false,
-    photos: ['img/actividades/moto-nieve/01.png','img/actividades/moto-nieve/02.png','img/actividades/moto-nieve/03.png']
+    photos: ['img/actividades/moto-nieve/02.png','img/actividades/moto-nieve/03.png','img/actividades/moto-nieve/01.png']
   },
   'moto270': {
     name: 'Moto de nieve + almuerzo gourmet · 2.5 hs',
@@ -1978,7 +1978,7 @@ var ACT_DATA = {
     pax: 60,
     desc: 'La versión extendida: 2.5 horas en moto de nieve con más recorrido, más terreno y almuerzo gourmet en la montaña. Para los que quieren más.',
     onlyA: false,
-    photos: ['img/actividades/moto-nieve/01.png','img/actividades/moto-nieve/02.png','img/actividades/moto-nieve/03.png']
+    photos: ['img/actividades/moto-nieve/03.png','img/actividades/moto-nieve/02.png','img/actividades/moto-nieve/01.png']
   },
   'cascada': {
     name: 'Cascada del Duende + almuerzo en montaña',
@@ -1987,7 +1987,7 @@ var ACT_DATA = {
     pax: 60,
     desc: 'Caminata guiada por el bosque andino hasta la Cascada del Duende, con almuerzo en la montaña incluido. La experiencia más contemplativa del menú — ideal para complementar dos días de ski.',
     onlyA: false,
-    photos: ['img/actividades/cascada-duende/01.jpg','img/actividades/cascada-duende/02.jpg','img/actividades/cascada-duende/03.png','img/actividades/cascada-duende/06.png']
+    photos: ['img/actividades/cascada-duende/03.png','img/actividades/cascada-duende/06.png','img/actividades/cascada-duende/01.jpg','img/actividades/cascada-duende/02.jpg']
   }
 };
 
@@ -2077,6 +2077,31 @@ function updateActivityPrices() {
       el = document.getElementById('detail-total-' + opt.toLowerCase()); if (el) el.textContent = 'total con vuelos ~$' + fmt(totalGroup);
     }
   });
+  updateSummary();
+}
+
+function updateSummary() {
+  if (!ACT_DATA || !currentOption) return;
+  var act = ACT_DATA[currentActivity] || ACT_DATA['none'];
+  var hasAct = currentActivity && currentActivity !== 'none';
+  var baseUsd = BASE_USD[currentOption];
+  var actUsd = 0;
+  if (hasAct) {
+    actUsd = act.fixed ? (currentOption === 'A' ? act.fixedTotal / act.pax : 0) : act.price;
+  }
+  var totalUsdPerson = baseUsd + actUsd;
+  var sinImpGroup = totalUsdPerson * 60;
+  var conImpGroup = Math.round(sinImpGroup * IMP_MULT);
+  var totalGroup = conImpGroup + VUELOS_USD;
+
+  var optNames = { A: 'Opción A · Swell Snow House', B: 'Opción B · Dos Swell Houses', C: 'Opción C · Hostería' };
+  var el;
+  el = document.getElementById('sum-opt-name'); if (el) el.textContent = optNames[currentOption];
+  el = document.getElementById('sum-act-name'); if (el) el.textContent = hasAct && actUsd > 0 ? act.name : 'Sin actividad extra';
+  el = document.getElementById('sum-usd'); if (el) el.textContent = 'USD ' + fmt(Math.round(totalUsdPerson)) + ' / persona';
+  el = document.getElementById('sum-sin'); if (el) el.textContent = '$' + fmt(sinImpGroup) + ' ARS';
+  el = document.getElementById('sum-con'); if (el) el.textContent = '$' + fmt(conImpGroup) + ' ARS';
+  el = document.getElementById('sum-total'); if (el) el.textContent = '~$' + fmt(totalGroup) + ' ARS';
 }
 
 </script>
