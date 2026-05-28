@@ -1654,6 +1654,10 @@ footer {
       <span class="summary-label">Con impuestos · grupo</span>
       <span class="summary-val" id="sum-con">$67.230</span>
     </div>
+    <div class="summary-row" id="sum-opc-row" style="display:none;">
+      <span class="summary-label">+ Clases de ski</span>
+      <span class="summary-val" id="sum-opc-val"></span>
+    </div>
     <div class="summary-row">
       <span class="summary-label">+ Vuelos grupo</span>
       <span class="summary-val">~$19.530 USD</span>
@@ -1829,6 +1833,7 @@ function adj(key, delta) {
   var el = document.getElementById('calc-total');
   el.style.display = total > 0 ? 'block' : 'none';
   document.getElementById('calc-valor').textContent = total.toLocaleString();
+  updateSummary();
 }
 
 // Scroll fade-in
@@ -2079,7 +2084,10 @@ function updateSummary() {
   var totalUsdPerson = baseUsd + actUsd;
   var sinImpGroup = totalUsdPerson * 60;
   var conImpGroup = Math.round(sinImpGroup * IMP_MULT);
-  var totalGroup = conImpGroup + VUELOS_USD;
+
+  // Opcionales (clases de ski)
+  var opcionalesUsd = COUNTS ? Object.keys(COUNTS).reduce(function(s,k){ return s + COUNTS[k]*PRICES[k]; }, 0) : 0;
+  var totalGroup = conImpGroup + VUELOS_USD + opcionalesUsd;
 
   var optNames = { A: 'Opción A · Swell Snow House', B: 'Opción B · Dos Swell Houses', C: 'Opción C · Hostería' };
   var el;
@@ -2088,6 +2096,11 @@ function updateSummary() {
   el = document.getElementById('sum-usd'); if (el) el.textContent = 'USD ' + fmt(Math.round(totalUsdPerson)) + ' / persona';
   el = document.getElementById('sum-sin'); if (el) el.textContent = '$' + fmt(sinImpGroup) + ' ARS';
   el = document.getElementById('sum-con'); if (el) el.textContent = '$' + fmt(conImpGroup) + ' ARS';
+  // Fila opcionales
+  var sumOpcRow = document.getElementById('sum-opc-row');
+  var sumOpcVal = document.getElementById('sum-opc-val');
+  if (sumOpcRow) sumOpcRow.style.display = opcionalesUsd > 0 ? 'flex' : 'none';
+  if (sumOpcVal) sumOpcVal.textContent = 'USD ' + fmt(opcionalesUsd);
   el = document.getElementById('sum-total'); if (el) el.textContent = '~$' + fmt(totalGroup) + ' ARS';
 }
 
