@@ -1106,12 +1106,12 @@ footer {
           <div class="act-card-price">USD 170 / persona</div>
         </div>
       </div>
-      <div class="act-card" id="act-kundo" onclick="selectActivity('kundo')" style="display:none;">
+      <div class="act-card" id="act-kundo" onclick="selectActivity('kundo')">
         <img class="act-card-thumb" src="img/actividades/navegada-kundo/02.jpg" loading="lazy" alt="Navegada">
         <div class="act-card-body">
           <div class="act-card-name">Navegada por el lago</div>
-          <div class="act-card-price">USD 4.020 · grupo 30 pax</div>
-          <div class="act-card-badge">Solo Opción A</div>
+          <div class="act-card-price" id="kundo-card-price">USD 4.020 · 30 pax</div>
+          <div class="act-card-badge" id="kundo-card-badge">Máx. 30 pax por turno</div>
         </div>
       </div>
       <div class="act-card" id="act-moto60" onclick="selectActivity('moto60')">
@@ -1763,9 +1763,6 @@ function selectOption(opt) {
   document.getElementById('hero-subtitle').textContent = isA
     ? 'Bariloche · 30 + 30 personas · 4 días / 3 noches'
     : 'Bariloche · 60 personas · 4 días / 3 noches';
-  // Kundo solo aparece en Opción A
-  var kundoCard = document.getElementById('act-kundo');
-  if (kundoCard) kundoCard.style.display = isA ? 'flex' : 'none';
   // Nota 30 pax en selector de actividad
   var selectorNote = document.getElementById('act-selector-note');
   if (selectorNote) {
@@ -1773,10 +1770,14 @@ function selectOption(opt) {
       ? 'Elegí la actividad que suma el grupo · el precio se agrega al paquete<br><span style="color:var(--coastline);font-weight:600;">✦ Con 30 personas la experiencia es muchísimo más íntima y auténtica</span>'
       : 'Elegí la actividad que suma el grupo · el precio se agrega al paquete';
   }
+  // Kundo: badge dinámico según pax del grupo
+  var kundoBadge = document.getElementById('kundo-card-badge');
+  var kundoPrice = document.getElementById('kundo-card-price');
+  if (kundoBadge) kundoBadge.textContent = isA ? 'Máx. 30 pax por turno' : 'Máx. 30 pax por turno · grupo de 60 va en 2 turnos';
+  if (kundoPrice) kundoPrice.textContent = isA ? 'USD 4.020 · 30 pax' : 'USD 8.040 · 2 turnos de 30';
   // Galería de alojamiento
   updateAlojGallery(opt);
-  if (!isA && currentActivity === 'kundo') selectActivity('none');
-  else updateActivityPrices();
+  updateActivityPrices();
 }
 
 function updateAlojGallery(opt) {
@@ -1950,7 +1951,7 @@ var ACT_DATA = {
     fixed: true,
     fixedTotal: 4020,
     pax: 30,
-    desc: 'Navegación exclusiva por el Lago Nahuel Huapi con parada en Isla Victoria. Gastronomía premium a bordo, vistas de la cordillera desde el agua. Esta experiencia tiene cupo máximo de 30 personas — solo disponible en Opción A, que divide al grupo en dos mitades.',
+    desc: 'Navegación exclusiva por el Lago Nahuel Huapi con parada en Isla Victoria. Gastronomía premium a bordo, vistas de la cordillera desde el agua. Cupo máximo de 30 personas por turno — grupos de 60 realizan la experiencia en dos turnos consecutivos.',
     onlyA: true,
     photos: ['img/actividades/navegada-kundo/02.jpg','img/actividades/navegada-kundo/04.jpg','img/actividades/navegada-kundo/03.jpg','img/actividades/navegada-kundo/01.jpg']
   },
@@ -2012,8 +2013,11 @@ function selectActivity(key) {
       return;
     }
     block.style.display = 'block';
+    var kundoTotal = act.fixed ? (o === 'A' ? act.fixedTotal : act.fixedTotal * 2) : 0;
     var priceLabel = act.fixed
-      ? 'USD ' + fmt(act.fixedTotal) + ' · grupo ' + act.pax + ' pax'
+      ? (o === 'A'
+          ? 'USD ' + fmt(act.fixedTotal) + ' · 30 pax'
+          : 'USD ' + fmt(kundoTotal) + ' · 2 turnos de 30 pax')
       : 'USD ' + fmt(act.price) + ' / persona';
     var photosHtml = '';
     if (act.photos && act.photos.length) {
@@ -2039,7 +2043,12 @@ function updateActivityPrices() {
     var baseUsd = BASE_USD[opt];
     var actUsd = 0;
     if (hasAct) {
-      actUsd = act.fixed ? (opt === 'A' ? act.fixedTotal / act.pax : 0) : act.price;
+      if (act.fixed) {
+        // Navegada: 4020 para 30 pax (opt A), 8040 para 60 pax (opt B/C)
+        actUsd = opt === 'A' ? act.fixedTotal : act.fixedTotal * 2;
+      } else {
+        actUsd = act.price;
+      }
     }
     var totalUsdPerson = baseUsd + actUsd;
     var sinImpGroup = totalUsdPerson * 60;
@@ -2079,7 +2088,11 @@ function updateSummary() {
   var baseUsd = BASE_USD[currentOption];
   var actUsd = 0;
   if (hasAct) {
-    actUsd = act.fixed ? (currentOption === 'A' ? act.fixedTotal / act.pax : 0) : act.price;
+    if (act.fixed) {
+      actUsd = currentOption === 'A' ? act.fixedTotal : act.fixedTotal * 2;
+    } else {
+      actUsd = act.price;
+    }
   }
   var totalUsdPerson = baseUsd + actUsd;
   var sinImpGroup = totalUsdPerson * 60;
