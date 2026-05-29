@@ -1648,11 +1648,11 @@ footer {
     </div>
     <div class="summary-row">
       <span class="summary-label">Sin impuestos · grupo</span>
-      <span class="summary-val" id="sum-sin">$54.000</span>
+      <span class="summary-val" id="sum-sin">USD 54.000</span>
     </div>
     <div class="summary-row">
       <span class="summary-label">Con impuestos · grupo</span>
-      <span class="summary-val" id="sum-con">$67.230</span>
+      <span class="summary-val" id="sum-con">USD 67.230</span>
     </div>
     <div class="summary-row" id="sum-opc-row" style="display:none;">
       <span class="summary-label">+ Clases de ski</span>
@@ -1664,7 +1664,7 @@ footer {
     </div>
     <div class="summary-row summary-total">
       <span class="summary-label">Total estimado</span>
-      <span class="summary-val" id="sum-total">~$86.760</span>
+      <span class="summary-val" id="sum-total">~USD 86.760</span>
     </div>
   </div>
 </section>
@@ -2094,14 +2094,14 @@ function updateSummary() {
   el = document.getElementById('sum-opt-name'); if (el) el.textContent = optNames[currentOption];
   el = document.getElementById('sum-act-name'); if (el) el.textContent = hasAct && actUsd > 0 ? act.name : 'Sin actividad extra';
   el = document.getElementById('sum-usd'); if (el) el.textContent = 'USD ' + fmt(Math.round(totalUsdPerson)) + ' / persona';
-  el = document.getElementById('sum-sin'); if (el) el.textContent = '$' + fmt(sinImpGroup) + ' ARS';
-  el = document.getElementById('sum-con'); if (el) el.textContent = '$' + fmt(conImpGroup) + ' ARS';
+  el = document.getElementById('sum-sin'); if (el) el.textContent = 'USD ' + fmt(sinImpGroup);
+  el = document.getElementById('sum-con'); if (el) el.textContent = 'USD ' + fmt(conImpGroup);
   // Fila opcionales
   var sumOpcRow = document.getElementById('sum-opc-row');
   var sumOpcVal = document.getElementById('sum-opc-val');
   if (sumOpcRow) sumOpcRow.style.display = opcionalesUsd > 0 ? 'flex' : 'none';
   if (sumOpcVal) sumOpcVal.textContent = 'USD ' + fmt(opcionalesUsd);
-  el = document.getElementById('sum-total'); if (el) el.textContent = '~$' + fmt(totalGroup) + ' ARS';
+  el = document.getElementById('sum-total'); if (el) el.textContent = '~USD ' + fmt(totalGroup);
 }
 
 </script>
